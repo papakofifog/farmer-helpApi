@@ -16,17 +16,10 @@ const postRoute= require('./routes/post') ;
 
 app.use('/posts',postRoute);
 
-app.get('/',(req,res)=>{
-    res.send("We are on home")
+app.use('/',(res,req)=>{
+    res.send("Hello word");
 })
 
-app.post('/',(req,res)=>{
-    res.send("We are on home")
-})
-
-app.put('/',(req,res)=>{
-    res.send("We are on home")
-})
 
 //connect to db
 mongoose.connect(process.env['MONGO_URI'],{ useNewUrlParser: true, useUnifiedTopology: true },()=>{
