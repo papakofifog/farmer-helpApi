@@ -16,9 +16,9 @@ const postRoute= require('./routes/post') ;
 
 app.use('/posts',postRoute);
 
-app.use('/',(res,req)=>{
+/*app.use('/',(res,req)=>{
     res.send("Hello word");
-})
+})*/
 
 
 //connect to db

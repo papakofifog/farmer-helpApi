@@ -3,22 +3,27 @@ const { sign, verify } = require("jsonwebtoken");
 const createTokens = (user) => {
   const accessToken = sign(
     { username: user.username, id: user.id },
-    process.env['JWTAUT']
+    'water'
   );
 
   return accessToken;
 };
 const validateToken = (req, res, next) => {
-  const accessToken = req.cookie["access-token"].value;
-  console.log(accessToken)
+  const accessToken = req.headers.cookie;
+  //let token=accessToken.match(/^[access-token=]/)
+  const result=accessToken.slice(6,);
+  //console.log(result)
 
   if (!accessToken)
     return res.status(400).json({ error: "User not Authenticated!" });
 
   try {
-    const validToken = verify(accessToken, process.env['JWTAUT']);
+    
+    const validToken = verify(result, 'water');
+    
     if (validToken) {
       req.authenticated = true;
+      
       return next();
     }
   } catch (err) {
@@ -26,4 +31,4 @@ const validateToken = (req, res, next) => {
   }
 };
 
-module.exports = { createTokens, validateToken };
+module.exports = { createTokens, validateToken }

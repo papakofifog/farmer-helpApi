@@ -1,5 +1,6 @@
 const { response, application } = require('express');
 const express = require('express')
+const decodeJwt= require('jwt-decode');
 
 const router = express.Router();
 // import the farmer module
@@ -55,9 +56,10 @@ router.post('/login',async (req,res)=>{
         res.status(400).json({error:"Wrong user name and password"})
     }else{
         const accessToken = createTokens(user);
-        res.cookie('access-token', accessToken, {
+        res.clearCookie('token');
+        res.cookie('token',accessToken, {
             maxAge: 60*60*24*30*1000,
-            httpOnly: true
+            httpOnly: false
         });
 
         res.json("Logged In")
@@ -65,9 +67,25 @@ router.post('/login',async (req,res)=>{
 
 })
 
+    
 
-router.get("/profile", validateToken, (req, res) => {
-    res.json("profile");
+router.get("/profile", validateToken, async (req, res) => {
+    let newResult= req.headers.cookie.slice(6,)
+    let userDetails=decodeJwt(newResult);
+    let userId= userDetails.id;
+    console.log(userId)
+    // get user details
+    try{
+        const farmerDetails= await farmerData.findById(userId);
+    res.json({
+        "name": farmerDetails.name,
+        "farmLocation": farmerDetails.farmLocation
+    })
+    //res.json(farmerDetails)
+    }catch(err){
+        res.json(err)
+    }
+    
   });
 
 

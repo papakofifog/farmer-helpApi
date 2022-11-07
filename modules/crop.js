@@ -18,6 +18,8 @@ const cropRevenue= mongoose.Schema({
         required:"true"
     }
     
-})
+});
+
+
 
 module.exports = mongoose.model('crop',cropRevenue)
