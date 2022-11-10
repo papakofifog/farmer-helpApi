@@ -11,7 +11,7 @@ const statementDecodeJwt= require('jwt-decode');
 
 // code to get all incomeStatements
 
-statementRouter.get('/statements', async(req,res)=>{
+statementRouter.get('/calculation', async(req,res)=>{
     try{
         let all_statements= await cropRevenue.find();
         res.json(all_statements)

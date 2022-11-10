@@ -18,7 +18,7 @@ app.use('/posts',postRoute);
 
 const statementRoute= require('./routes/statement')
 
-app.use('',statementRoute);
+app.use('/statement',statementRoute);
 //let cropRevenue= require('./modules/crop')
 
 
