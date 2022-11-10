@@ -2,24 +2,33 @@ const mongoose = require('mongoose');
 
 const cropRevenue= mongoose.Schema({
     farmerId:{
+        type: "String",
+        required: true
+    },
+    crops:{
         type:"String",
+        required:true
+    },
+    totalRevenue:{
+        type:"number",
         required:"true"
     },
-    CrepName:{
-        type:"String",
+    totalExpenses: {
+        type:"number",
         required:"true"
     },
-    revenueGenerated: {
-        type:"String",
+    NetIncome:{
+        type:"number",
         required:"true"
     },
-    farming_period:{
-        type:"String",
-        required:"true"
+    Period: {
+        type: "String",
+        required: true
     }
     
 });
 
 
-
 module.exports = mongoose.model('crop',cropRevenue)
+
+

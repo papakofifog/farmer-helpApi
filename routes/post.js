@@ -8,8 +8,9 @@ let farmerData= require('../modules/farmer');
 
 
 const bcrypt = require("bcrypt");
-const cookieParser = require("cookie-parser");
+//const cookieParser = require("cookie-parser");
 const { createTokens, validateToken } = require("../JWT");
+//const farmerData = require('../modules/farmer');
 
 
 // code to get all farmers
@@ -26,20 +27,26 @@ router.get('/', async(req,res)=>{
 // code to register a farmer
 router.post('/register', async (req,res)=>{
     
-    let newfarmer= new  farmerData({
-        name:req.body.name,
-        username:req.body.username,
-        password:req.body.password,
-        farmLocation:req.body.farmLocation
-    })
-
-    try{
-        const savedFarmer= await newfarmer.save();
-        res.json("User Registered")
-    }catch(err){
-        res.json({'error_message': 'err'})
-    }
+    const body= req.body;
     
+    console.log(body.name)
+
+    if (!body.username && body.password){
+        return res.status(400).send({error:"Data not formatted properly"})
+    }
+    // creating a new mongoose doc from user data
+    let newfarmer= new  farmerData(body);
+    let salt= await bcrypt.genSalt(10);
+
+    newfarmer.password= await bcrypt.hash(newfarmer.password,salt);
+
+    //res.json(newfarmer)
+    try{
+        newfarmer.save().then((doc)=> res.status(201).json({"message":"User registered"}));
+    }catch(err){
+        res.json({'error_message': err})
+    }
+
 })
 
 
@@ -50,19 +57,20 @@ router.post('/login',async (req,res)=>{
 
     if(!user) res.status(400).json({"error":"User does not Exists"});
 
-    const userPassword= user.password;
+    const Isverified= await bcrypt.compare(password,user.password);
 
-    if( password != userPassword){
-        res.status(400).json({error:"Wrong user name and password"})
-    }else{
+    
+
+    if( Isverified){
         const accessToken = createTokens(user);
         res.clearCookie('token');
         res.cookie('token',accessToken, {
             maxAge: 60*60*24*30*1000,
             httpOnly: false
-        });
-
+        })
         res.json("Logged In")
+    }else{
+        res.status(400).json({error:"Invalid username or password."})      
     }
 
 })
@@ -73,12 +81,13 @@ router.get("/profile", validateToken, async (req, res) => {
     let newResult= req.headers.cookie.slice(6,)
     let userDetails=decodeJwt(newResult);
     let userId= userDetails.id;
-    console.log(userId)
+    //console.log(userId)
     // get user details
     try{
         const farmerDetails= await farmerData.findById(userId);
     res.json({
         "name": farmerDetails.name,
+        "BuisnessName":farmerDetails.BuisnessName,
         "farmLocation": farmerDetails.farmLocation
     })
     //res.json(farmerDetails)
@@ -114,6 +123,8 @@ router.delete('/:farmerId',async (req,res)=>{
 })
 
 
+
+
 //Code update a famer data
 
 router.patch('/:farmerId',async (req,res)=>{
@@ -129,3 +140,4 @@ router.patch('/:farmerId',async (req,res)=>{
 })
 
 module.exports = router;
+

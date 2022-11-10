@@ -16,9 +16,15 @@ const postRoute= require('./routes/post') ;
 
 app.use('/posts',postRoute);
 
-/*app.use('/',(res,req)=>{
-    res.send("Hello word");
-})*/
+const statementRoute= require('./routes/statement')
+
+app.use('',statementRoute);
+//let cropRevenue= require('./modules/crop')
+
+
+const { validateToken } = require('./JWT');
+
+
 
 
 //connect to db
