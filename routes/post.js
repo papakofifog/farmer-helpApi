@@ -87,7 +87,7 @@ router.get("/profile", validateToken, async (req, res) => {
         const farmerDetails= await farmerData.findById(userId);
     res.json({
         "name": farmerDetails.name,
-        "BuisnessName":farmerDetails.BuisnessName,
+        //"BuisnessName":farmerDetails.BuisnessName,
         "farmLocation": farmerDetails.farmLocation
     })
     //res.json(farmerDetails)

@@ -16,10 +16,6 @@ const farmers= mongoose.Schema({
         type:"String",
         required:"true"
     },
-    BuisnessName:{
-        type: "String",
-        required: "true"
-    },
     farmLocation : {
         type:"String",
         required:"true"

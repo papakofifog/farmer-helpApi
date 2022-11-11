@@ -11,7 +11,7 @@ const statementDecodeJwt= require('jwt-decode');
 
 // code to get all incomeStatements
 
-statementRouter.get('/calculation', async(req,res)=>{
+statementRouter.get('/viewStatements', async(req,res)=>{
     try{
         let all_statements= await cropRevenue.find();
         res.json(all_statements)
@@ -24,7 +24,7 @@ statementRouter.get('/calculation', async(req,res)=>{
 
 
 // code to create the income statement data.
-statementRouter.post('/statement', validateToken, async(req, res)=>{
+statementRouter.post('/calculation', validateToken, async(req, res)=>{
     
     //const { period, crops ,total_revenue,cost_goods,expenses, } = req.body;
     let newResult= req.headers.cookie.slice(6,)
